@@ -1,0 +1,68 @@
+import { Button, buttonVariants } from "@/app/components/ui/button";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/app/components/ui/sheet";
+import { cn } from "@/lib/utils";
+import { Menu } from "lucide-react";
+import Link from "next/link";
+
+export const MENU_SECTIONS = [
+  { name: "home", href: "/" },
+  { name: "headphones", href: "/headphones" },
+  { name: "speakers", href: "/speakers" },
+  { name: "earphones", href: "/earphones" },
+];
+
+export default function MenuButton() {
+  return (
+    <Sheet>
+      <SheetTrigger className="lg:hidden group">
+        <Menu className="text-white size-6 group-hover:text-slate-400" />
+      </SheetTrigger>
+
+      <SheetContent side="left" className="overflow-y-scroll">
+        <SheetHeader>
+          <SheetTitle className="text-xl font-bold mr-auto mb-4">
+            Menu
+          </SheetTitle>
+          <SheetDescription className="text-base font-medium">
+            Welcome Audiophile
+          </SheetDescription>
+        </SheetHeader>
+
+        <ul className="mt-8">
+          {MENU_SECTIONS.map((section) => (
+            <li key={`${section.href}-${section.name}`} className="w-full">
+              <SheetTrigger className="w-full group" asChild>
+                <Link
+                  href={section.href}
+                  className={cn(
+                    buttonVariants({
+                      variant: "ghost",
+                      size: "lg",
+                    }),
+                    "w-full text-lg font-medium text-muted-foreground group-hover:text-black"
+                  )}
+                >
+                  {section.name.toUpperCase()}
+                </Link>
+              </SheetTrigger>
+
+              <div className="border-t border-black w-full my-4"></div>
+            </li>
+          ))}
+        </ul>
+
+        <div className="flex flex-col gap-y-4 mt-16">
+          <Button className="w-full">Sign in</Button>
+          <Button className="w-full">Sign up</Button>
+        </div>
+      </SheetContent>
+    </Sheet>
+  );
+}
