@@ -23,6 +23,7 @@ const config = {
         "home-hero-desktop": "url('/assets/home/desktop/image-hero.jpg')",
         "home-hero-tablet": "url('/assets/home/tablet/image-header.jpg')",
         "home-hero-mobile": "url('/assets/home/mobile/image-header.jpg')",
+        "circle-pattern": "url('/assets/home/desktop/pattern-circles.svg')",
       },
       letterSpacing: {
         tightest: "-.1em",
