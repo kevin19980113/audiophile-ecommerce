@@ -33,10 +33,10 @@ export default function FirstHighlightedProduct() {
           truly remarkable sound.
         </p>
         <Link
-          href="/speakers/zx9"
+          href="/speakers/zx9-speaker"
           className={cn(
             buttonVariants(),
-            "px-8 py-4 mb-4 bg-black md:px-12 md:py-6 text-sm md:text-base"
+            "px-8 py-4 mb-4 bg-black hover:bg-slate-700 active:bg-slate-950 md:px-12 md:py-6 text-sm md:text-base"
           )}
         >
           SEE PRODUCT

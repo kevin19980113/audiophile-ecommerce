@@ -20,7 +20,7 @@ export default function ThirdHighlightedProduct() {
           YX1 EARPHONES
         </h1>
         <Link
-          href="/earphones/yx1"
+          href="/earphones/yx1-earphones"
           className="w-36 py-2 bg-transparent text-sm border border-black font-semibold
            whitespace-nowrap text-center hover:bg-white lg:w-52 lg:py-4 lg:text-base cursor-pointer"
         >
