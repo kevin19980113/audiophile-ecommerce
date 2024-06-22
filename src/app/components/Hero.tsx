@@ -17,7 +17,7 @@ export default function Hero() {
         for the passionate music enthusiast.
       </p>
       <Link
-        href="/headphones/xx99-mark-ii"
+        href="/headphones/xx99-mark-two-headphones"
         className={cn(buttonVariants(), "px-10 py-6 mt-12")}
       >
         SEE PRODUCT

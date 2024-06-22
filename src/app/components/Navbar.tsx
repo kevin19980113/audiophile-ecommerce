@@ -1,7 +1,7 @@
 import Link from "next/link";
 import MenuButton, { MENU_SECTIONS } from "./Menu";
 import Cart from "./Cart";
-import { Button } from "@/app/components/ui/button";
+import { Button, buttonVariants } from "@/app/components/ui/button";
 import { cn } from "@/lib/utils";
 
 export default function Navbar({ className }: { className?: string }) {
@@ -20,11 +20,12 @@ export default function Navbar({ className }: { className?: string }) {
 
       <div className="gap-x-6 text-base font-medium hidden lg:flex">
         {MENU_SECTIONS.map((section) => (
-          <Button variant="link">
-            <Link href={section.href} className="text-white">
-              {section.name.toUpperCase()}
-            </Link>
-          </Button>
+          <Link
+            href={section.href}
+            className={cn(buttonVariants({ variant: "link" }), "text-white")}
+          >
+            {section.name.toUpperCase()}
+          </Link>
         ))}
       </div>
 

@@ -9,17 +9,18 @@ type FormatPrice = {
   price: number | string;
   options: {
     currency?: "USD" | "CAD" | "EUR" | "GBP";
+    maximumFractionDigits?: number;
   };
 };
 
 export function formatPrice({ price, options }: FormatPrice) {
-  const { currency = "CAD" } = options;
+  const { currency = "CAD", maximumFractionDigits } = options;
 
   const numericPrice = typeof price === "string" ? parseFloat(price) : price;
 
   return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency,
-    maximumFractionDigits: 0,
+    maximumFractionDigits,
   }).format(numericPrice);
 }

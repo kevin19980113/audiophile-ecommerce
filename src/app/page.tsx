@@ -1,7 +1,6 @@
 import MaxWidthWrapper from "./components/MaxWidthWrapper";
 import ProductCard from "./components/ProductCard";
 import { CATEGORY } from "./data/CategoryData";
-
 import Hero from "./components/Hero";
 import HighlightedProducts from "./components/HighlightedProducts";
 import Navbar from "./components/Navbar";
@@ -13,7 +12,7 @@ export default function Home() {
       <Navbar />
       <div
         className="bg-home-hero-mobile md:bg-home-hero-tablet xl:bg-home-hero-desktop 
-      bg-center bg-no-repeat bg-cover absolute h-[900px] inset-0 -z-10"
+      bg-center bg-no-repeat bg-cover absolute h-[900px] inset-0 -z-10 max-w-screen-2xl mx-auto"
       ></div>
 
       <Hero />

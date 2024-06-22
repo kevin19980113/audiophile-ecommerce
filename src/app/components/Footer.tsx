@@ -1,14 +1,15 @@
 import Link from "next/link";
 import { MENU_SECTIONS } from "./Menu";
-import { Button } from "./ui/button";
+import { Button, buttonVariants } from "./ui/button";
 import { FaFacebookSquare } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { FaInstagram } from "react-icons/fa6";
 import MaxWidthWrapper from "./MaxWidthWrapper";
+import { cn } from "@/lib/utils";
 export default function Footer() {
   return (
     <div
-      className="w-full flex flex-col items-center gap-y-10 bg-gray-950 pb-16 md:items-start
+      className="w-full max-w-screen-2xl mx-auto flex flex-col items-center gap-y-10 bg-gray-950 pb-16 md:items-start
      px-8 md:px-16 lg:px-32"
     >
       <div className="w-[150px] h-1 bg-orange-500"></div>
@@ -20,11 +21,12 @@ export default function Footer() {
 
         <div className="flex flex-col items-center justify-center gap-y-2 md:flex-row md:gap-x-2 md:-ml-4 xl:-mr-4">
           {MENU_SECTIONS.map((section) => (
-            <Button variant="link">
-              <Link href={section.href} className="text-white">
-                {section.name.toUpperCase()}
-              </Link>
-            </Button>
+            <Link
+              href={section.href}
+              className={cn(buttonVariants({ variant: "link" }), "text-white")}
+            >
+              {section.name.toUpperCase()}
+            </Link>
           ))}
         </div>
       </div>
