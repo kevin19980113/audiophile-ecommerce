@@ -10,6 +10,7 @@ import BottomDescription from "@/app/components/BottomDescription";
 import Features from "@/app/components/Features";
 import Gallery from "@/app/components/Gallery";
 import RelatedItems from "@/app/components/RelatedItems";
+
 export default function ProductDetailPage({
   params,
 }: {
@@ -35,7 +36,7 @@ export default function ProductDetailPage({
         href={`/${productData?.category}`}
         className={cn(
           buttonVariants({ variant: "link" }),
-          "text-muted-foreground text-lg mr-auto mt-6 -ml-4"
+          "text-muted-foreground text-base md:text-lg mr-auto mt-6 -ml-6 flex items-center"
         )}
       >
         <ChevronLeft /> Go back

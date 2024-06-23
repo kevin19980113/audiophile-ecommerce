@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 export default function Footer() {
   return (
     <div
-      className="w-full max-w-screen-2xl mx-auto flex flex-col items-center gap-y-10 bg-gray-950 pb-16 md:items-start
+      className="w-full max-w-screen-2xl mx-auto flex flex-col items-center gap-y-10 bg-black pb-16 md:items-start
      px-8 md:px-16 lg:px-32"
     >
       <div className="w-[150px] h-1 bg-orange-500"></div>

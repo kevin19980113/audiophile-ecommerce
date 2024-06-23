@@ -1,8 +1,6 @@
-import { cn } from "@/lib/utils";
 import { ChevronRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { buttonVariants } from "./ui/button";
 
 export default function ProductCard({
   category,

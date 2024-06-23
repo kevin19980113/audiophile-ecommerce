@@ -1,10 +1,12 @@
 "use client";
 
-import { formatPrice } from "@/lib/utils";
-import { Button } from "./ui/button";
+import { cn, formatPrice } from "@/lib/utils";
+import { Button, buttonVariants } from "./ui/button";
 import { useCart } from "../hooks/use-cart";
 import { useState } from "react";
-import productsData from "../data/data.json";
+import { useToast } from "./ui/use-toast";
+import { ToastAction } from "./ui/toast";
+import Link from "next/link";
 
 export default function Price({
   price,
@@ -21,6 +23,7 @@ export default function Price({
 }) {
   const [quantity, setQuantity] = useState(1);
   const { addItem } = useCart();
+  const { toast } = useToast();
 
   const increment = () => {
     setQuantity((prev) => prev + 1);
@@ -30,6 +33,24 @@ export default function Price({
     if (quantity > 1) {
       setQuantity((prev) => prev - 1);
     }
+  };
+
+  const handleAddToCart = () => {
+    addItem(product, quantity);
+    toast({
+      title: `Added ${product.name} to cart`,
+      description: "Would you like to checkout?",
+      action: (
+        <Link href="/checkout">
+          <ToastAction
+            altText="Checkout"
+            className={cn(buttonVariants(), "whitespace-nowrap")}
+          >
+            Checkout
+          </ToastAction>
+        </Link>
+      ),
+    });
   };
 
   return (
@@ -57,10 +78,7 @@ export default function Price({
           </button>
         </div>
 
-        <Button
-          className="col-span-2"
-          onClick={() => addItem(product, quantity)}
-        >
+        <Button className="col-span-2" onClick={handleAddToCart}>
           Add To Cart
         </Button>
       </div>
