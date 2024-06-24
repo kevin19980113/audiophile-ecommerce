@@ -1,4 +1,4 @@
-import { Button, buttonVariants } from "@/app/components/ui/button";
+import { buttonVariants } from "@/app/components/ui/button";
 import {
   Sheet,
   SheetContent,
@@ -10,6 +10,12 @@ import {
 import { cn } from "@/lib/utils";
 import { Menu } from "lucide-react";
 import Link from "next/link";
+import {
+  RegisterLink,
+  LoginLink,
+  LogoutLink,
+} from "@kinde-oss/kinde-auth-nextjs/components";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
 export const MENU_SECTIONS = [
   { name: "home", href: "/" },
@@ -18,10 +24,13 @@ export const MENU_SECTIONS = [
   { name: "earphones", href: "/earphones" },
 ];
 
-export default function MenuButton() {
+export default async function MenuButton() {
+  const { getUser } = getKindeServerSession();
+  const user = await getUser();
+
   return (
     <Sheet>
-      <SheetTrigger className="lg:hidden group">
+      <SheetTrigger className="xl:hidden group">
         <Menu className="text-white size-6 group-hover:text-slate-400" />
       </SheetTrigger>
 
@@ -59,8 +68,38 @@ export default function MenuButton() {
         </ul>
 
         <div className="flex flex-col gap-y-4 mt-16">
-          <Button className="w-full">Sign in</Button>
-          <Button className="w-full">Sign up</Button>
+          {!user && (
+            <>
+              {" "}
+              <LoginLink
+                className={cn(
+                  buttonVariants({ variant: "ghost", size: "sm" }),
+                  "text-black bg-gray-200 hover:bg-slate-300"
+                )}
+              >
+                Sign in
+              </LoginLink>
+              <RegisterLink
+                className={cn(
+                  buttonVariants({ variant: "ghost", size: "sm" }),
+                  "text-black bg-gray-200 hover:bg-slate-300"
+                )}
+              >
+                Create Account
+              </RegisterLink>
+            </>
+          )}
+
+          {user && (
+            <LogoutLink
+              className={cn(
+                buttonVariants({ variant: "ghost", size: "sm" }),
+                "text-black bg-gray-200 hover:bg-slate-300"
+              )}
+            >
+              Sign Out
+            </LogoutLink>
+          )}
         </div>
       </SheetContent>
     </Sheet>

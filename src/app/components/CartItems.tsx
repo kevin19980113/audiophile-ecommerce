@@ -11,29 +11,38 @@ export default function CartItems({ mode }: { mode: "checkout" | "cart" }) {
   );
   return (
     <>
-      <ScrollArea className="w-full max-h-60 md:max-h-80 flex flex-col items-center pr-4">
+      <ScrollArea className="w-full max-h-60 md:max-h-80 flex flex-col items-center pr-3">
         <div className="w-full flex flex-col items-center gap-y-6">
           {items.map((item) => (
             <div
               key={`${item.product.name}-${item.product.id}`}
               className="w-full flex items-center justify-between gap-x-6"
             >
-              <div className="flex items-center gap-x-2 w-2/3">
+              <div className="flex items-center gap-x-3 w-full">
                 <img
                   src={item.product.image}
                   alt={item.product.name}
-                  className="size-12 md:size-24 rounded-md"
+                  className="size-12 md:size-20 xl:size-24 rounded-md"
                 />
-                <div className="flex flex-col items-start">
-                  <h1 className="text-xs sm:text-sm font-semibold">
-                    {item.product.name}
-                  </h1>
-                  <span className="text-xs sm:text-sm font-medium text-muted-foreground">
-                    {formatPrice({
-                      price: item.product.price,
-                      options: { maximumFractionDigits: 0 },
-                    })}
-                  </span>
+
+                <div className="flex items-start justify-between gap-x-4 w-full">
+                  <div className="flex flex-col items-start">
+                    <h1 className="text-xs xl:text-sm font-semibold">
+                      {item.product.name}
+                    </h1>
+                    <span className="text-xs xl:text-sm font-medium text-muted-foreground">
+                      {formatPrice({
+                        price: item.product.price,
+                        options: { maximumFractionDigits: 0 },
+                      })}
+                    </span>
+                  </div>
+
+                  {mode === "checkout" && (
+                    <div className="text-muted-foreground font-medium text-xs md:text-sm xl:text-base">
+                      x{item.quantity}
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -57,11 +66,6 @@ export default function CartItems({ mode }: { mode: "checkout" | "cart" }) {
                   </button>
                 </div>
               )}
-              {mode === "checkout" && (
-                <div className="text-muted-foreground font-medium text-xs md:text-base">
-                  x{item.quantity}
-                </div>
-              )}
             </div>
           ))}
         </div>
@@ -69,10 +73,10 @@ export default function CartItems({ mode }: { mode: "checkout" | "cart" }) {
 
       <div className="w-full flex flex-col items-center gap-y-4">
         <div className="w-full flex items-center justify-between gap-x-4">
-          <span className="text-sm md:text-lg font-medium text-muted-foreground">
+          <span className="text-sm xl:text-lg font-medium text-muted-foreground">
             TOTAL
           </span>
-          <span className="text-sm md:text-lg font-bold">
+          <span className="text-sm xl:text-lg font-bold">
             {formatPrice({
               price: totalPrice,
               options: { maximumFractionDigits: 2 },
@@ -83,10 +87,10 @@ export default function CartItems({ mode }: { mode: "checkout" | "cart" }) {
         {mode === "checkout" && (
           <>
             <div className="w-full flex items-center justify-between gap-x-4">
-              <span className="text-sm md:text-lg font-medium text-muted-foreground">
+              <span className="text-sm xl:text-lg font-medium text-muted-foreground">
                 SHIPPING
               </span>
-              <span className="text-sm md:text-lg font-bold">
+              <span className="text-sm xl:text-lg font-bold">
                 {formatPrice({
                   price: 1,
                   options: { maximumFractionDigits: 0 },
@@ -95,10 +99,10 @@ export default function CartItems({ mode }: { mode: "checkout" | "cart" }) {
             </div>
 
             <div className="w-full flex items-center justify-between gap-x-4">
-              <span className="text-sm md:text-lg font-medium text-muted-foreground">
+              <span className="text-sm xl:text-lg font-medium text-muted-foreground">
                 TAX (13%)
               </span>
-              <span className="text-sm md:text-lg font-bold">
+              <span className="text-sm xl:text-lg font-bold">
                 {formatPrice({
                   price: totalPrice * 0.13,
                   options: { maximumFractionDigits: 2 },
@@ -107,10 +111,10 @@ export default function CartItems({ mode }: { mode: "checkout" | "cart" }) {
             </div>
 
             <div className="w-full flex items-center justify-between mt-6 gap-x-4">
-              <span className="text-sm md:text-lg font-medium text-muted-foreground">
-                GRADN TOTAL
+              <span className="text-sm xl:text-lg font-medium text-muted-foreground">
+                GRAND TOTAL
               </span>
-              <span className="text-sm md:text-lg font-bold">
+              <span className="text-sm xl:text-lg font-bold">
                 {formatPrice({ price: totalPrice * 1.13, options: {} })}
               </span>
             </div>

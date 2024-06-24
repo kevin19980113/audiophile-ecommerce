@@ -44,12 +44,14 @@ export default function Price({
         <Link href="/checkout">
           <ToastAction
             altText="Checkout"
-            className={cn(buttonVariants(), "whitespace-nowrap")}
+            className={cn(buttonVariants(), "whitespace-nowrap, -ml-4")}
           >
             Checkout
           </ToastAction>
         </Link>
       ),
+      className:
+        "flex flex-col gap-y-2 items-start text-sm md:flex-row md:gap-x-4 md:items-center",
     });
   };
 

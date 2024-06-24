@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { buttonVariants } from "./ui/button";
+import productsData from "@/app/data/data.json";
 
 type RelatedItemsProps = {
   others: {
@@ -15,12 +16,17 @@ type RelatedItemsProps = {
 };
 
 export default function RelatedItems({ others }: RelatedItemsProps) {
+  const relatedItemCategory = others.map((other) => {
+    return productsData.find((product) => product.slug === other.slug)
+      ?.category;
+  });
+
   return (
     <div className="w-full flex flex-col items-center gap-y-6 mt-16 -mb-44">
       <h1 className="text-xl md:text-2xl font-bold">YOU MAY ALSO LIKE</h1>
 
       <div className="grid grid-cols-1 gap-y-10 md:grid-cols-3 md:gap-x-10">
-        {others.map((other) => (
+        {others.map((other, index) => (
           <div key={other.name} className="flex flex-col items-center gap-y-6">
             <img
               src={other.image.desktop}
@@ -31,7 +37,7 @@ export default function RelatedItems({ others }: RelatedItemsProps) {
               {other.name.toUpperCase()}
             </h1>
             <Link
-              href={`${other.slug}`}
+              href={`/${relatedItemCategory[index]}/${other.slug}`}
               className={cn(buttonVariants(), "lg:px-8")}
             >
               SEE PRODUCT

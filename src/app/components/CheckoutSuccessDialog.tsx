@@ -14,7 +14,6 @@ import Link from "next/link";
 import { cn, formatPrice } from "@/lib/utils";
 import { ScrollArea } from "./ui/scroll-area";
 import { useCart } from "../hooks/use-cart";
-import { useRouter } from "next/navigation";
 
 export const CheckoutSuccessDialog = forwardRef(function CheckoutSuccessDialog(
   {},
@@ -22,7 +21,6 @@ export const CheckoutSuccessDialog = forwardRef(function CheckoutSuccessDialog(
 ) {
   const dialogTriggerRef = useRef<HTMLButtonElement | null>(null);
   const { items, clearCart } = useCart();
-  const router = useRouter();
 
   useImperativeHandle(
     ref,
@@ -37,14 +35,7 @@ export const CheckoutSuccessDialog = forwardRef(function CheckoutSuccessDialog(
   );
 
   return (
-    <Dialog
-      onOpenChange={(open) => {
-        if (!open) {
-          clearCart();
-          router.push("/");
-        }
-      }}
-    >
+    <Dialog>
       <DialogTrigger
         aria-label="dialog-trigger"
         className="hidden"
@@ -52,7 +43,7 @@ export const CheckoutSuccessDialog = forwardRef(function CheckoutSuccessDialog(
       />
 
       <DialogContent
-        className="max-w-[280px] md:max-w-lg aspect-square px-8 py-6 
+        className="max-w-[280px] md:max-w-xl aspect-square px-8 py-6 
       left-[50%] top-[50%] -translate-x-1/2 -translate-y-1/2 rounded-md"
       >
         <DialogHeader>
