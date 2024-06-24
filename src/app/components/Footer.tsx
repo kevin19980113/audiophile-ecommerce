@@ -4,7 +4,6 @@ import { Button, buttonVariants } from "./ui/button";
 import { FaFacebookSquare } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { FaInstagram } from "react-icons/fa6";
-import MaxWidthWrapper from "./MaxWidthWrapper";
 import { cn } from "@/lib/utils";
 export default function Footer() {
   return (

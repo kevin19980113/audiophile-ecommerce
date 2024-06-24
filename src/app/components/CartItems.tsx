@@ -1,8 +1,6 @@
-import { cn, formatPrice } from "@/lib/utils";
+import { formatPrice } from "@/lib/utils";
 import { useCart } from "../hooks/use-cart";
 import { ScrollArea } from "./ui/scroll-area";
-import { buttonVariants } from "./ui/button";
-import Link from "next/link";
 
 export default function CartItems({ mode }: { mode: "checkout" | "cart" }) {
   const { items, addItem, removeItem } = useCart();
@@ -13,11 +11,11 @@ export default function CartItems({ mode }: { mode: "checkout" | "cart" }) {
   );
   return (
     <>
-      <ScrollArea className="w-full max-h-60 md:max-h-80 flex flex-col items-center px-1">
+      <ScrollArea className="w-full max-h-60 md:max-h-80 flex flex-col items-center pr-4">
         <div className="w-full flex flex-col items-center gap-y-6">
           {items.map((item) => (
             <div
-              key={item.product.name}
+              key={`${item.product.name}-${item.product.id}`}
               className="w-full flex items-center justify-between gap-x-6"
             >
               <div className="flex items-center gap-x-2 w-2/3">

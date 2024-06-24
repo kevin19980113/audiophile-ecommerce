@@ -13,9 +13,16 @@ import { checkoutSchema } from "@/lib/schema";
 import { Label } from "@/app/components/ui/label";
 import { Input } from "@/app/components/ui/input";
 import { cn } from "@/lib/utils";
+import { CheckoutSuccessDialog } from "../components/CheckoutSuccessDialog";
+import { useRef } from "react";
+
+type CheckoutSuccessDialogRef = {
+  open: () => void;
+};
 
 export default function CheckoutPage() {
   const router = useRouter();
+  const successDialogRef = useRef<CheckoutSuccessDialogRef | null>(null);
 
   const {
     register,
@@ -35,7 +42,7 @@ export default function CheckoutPage() {
   };
 
   const onSubmit = (data: CheckoutSchemaType) => {
-    console.log(data);
+    successDialogRef.current?.open();
   };
 
   return (
@@ -211,7 +218,7 @@ export default function CheckoutPage() {
 
                 <div className="flex flex-col gap-y-4">
                   <div
-                    className="flex items-center space-x-2 border border-input rounded-md px-2 py-4 cursor-pointer has-[:checked]:border-orange-500 md:ml-2"
+                    className="flex items-center space-x-2 border-2 border-input rounded-md px-2 py-4 cursor-pointer has-[:checked]:border-orange-500 md:ml-2"
                     onClick={() => handleRadioClick("eMoney")}
                   >
                     <input
@@ -219,6 +226,7 @@ export default function CheckoutPage() {
                       value="eMoney"
                       id="eMoney"
                       checked={paymentMethod === "eMoney"}
+                      readOnly
                       className="accent-orange-500"
                     />
                     <Label htmlFor="eMoney" className="cursor-pointer">
@@ -227,7 +235,7 @@ export default function CheckoutPage() {
                   </div>
 
                   <div
-                    className="flex items-center space-x-2 border border-input rounded-md px-2 py-4 cursor-pointer has-[:checked]:border-orange-500 md:ml-2"
+                    className="flex items-center space-x-2 border-2 border-input rounded-md px-2 py-4 cursor-pointer has-[:checked]:border-orange-500 md:ml-2"
                     onClick={() => handleRadioClick("cashOnDelivery")}
                   >
                     <input
@@ -235,6 +243,7 @@ export default function CheckoutPage() {
                       value="cashOnDelivery"
                       id="cashOnDelivery"
                       checked={paymentMethod === "cashOnDelivery"}
+                      readOnly
                       className="accent-orange-500"
                     />
                     <Label htmlFor="cashOnDelivery" className="cursor-pointer">
@@ -303,6 +312,7 @@ export default function CheckoutPage() {
           </Button>
         </div>
       </div>
+      <CheckoutSuccessDialog ref={successDialogRef} />
     </MaxWidthWrapper>
   );
 }

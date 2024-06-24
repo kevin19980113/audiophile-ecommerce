@@ -26,6 +26,7 @@ export default function Home() {
             category={category.category}
             href={category.href}
             image={category.image}
+            key={category.category}
           />
         ))}
       </div>

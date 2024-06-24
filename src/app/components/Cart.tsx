@@ -1,7 +1,6 @@
 "use client";
 
 import { Button, buttonVariants } from "@/app/components/ui/button";
-import { ScrollArea } from "@/app/components/ui/scroll-area";
 import {
   Dialog,
   DialogContent,
@@ -9,7 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/app/components/ui/dialog";
-import { cn, formatPrice } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { ShoppingCart } from "lucide-react";
 import Link from "next/link";
 import { useCart } from "../hooks/use-cart";
@@ -30,7 +29,10 @@ export default function Cart() {
         </div>
       </DialogTrigger>
 
-      <DialogContent className="rounded-lg max-w-[280px] sm:max-w-md overflow-y-scroll max-h-screen">
+      <DialogContent
+        className="rounded-lg max-w-[280px] sm:max-w-md overflow-y-scroll max-h-screen"
+        aria-describedby={undefined}
+      >
         <DialogHeader>
           <DialogTitle>
             <div className="w-full flex items-center justify-between gap-x-6">

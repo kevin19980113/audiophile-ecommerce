@@ -1,7 +1,7 @@
 import Link from "next/link";
 import MenuButton, { MENU_SECTIONS } from "./Menu";
 import Cart from "./Cart";
-import { Button, buttonVariants } from "@/app/components/ui/button";
+import { buttonVariants } from "@/app/components/ui/button";
 import { cn } from "@/lib/utils";
 
 export default function Navbar({ className }: { className?: string }) {
@@ -23,6 +23,7 @@ export default function Navbar({ className }: { className?: string }) {
           <Link
             href={section.href}
             className={cn(buttonVariants({ variant: "link" }), "text-white")}
+            key={section.name}
           >
             {section.name.toUpperCase()}
           </Link>
