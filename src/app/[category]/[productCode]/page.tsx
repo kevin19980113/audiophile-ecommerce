@@ -10,6 +10,7 @@ import BottomDescription from "@/app/components/BottomDescription";
 import Features from "@/app/components/Features";
 import Gallery from "@/app/components/Gallery";
 import RelatedItems from "@/app/components/RelatedItems";
+import { notFound } from "next/navigation";
 
 export default function ProductDetailPage({
   params,
@@ -22,12 +23,10 @@ export default function ProductDetailPage({
     (product) => product.slug === params.productCode
   );
 
-  if (!productData) return <div>Product not found</div>;
+  if (!productData) return notFound();
 
   return (
     <>
-      <div className="absolute inset-0 bg-black h-[170px] md:h-[250px] -z-10 max-w-screen-2xl mx-auto"></div>
-
       <div className="text-white text-2xl md:text-3xl lg:text-4xl font-medium mx-auto py-8 md:py-16">
         PRODUCT DETAILS
       </div>

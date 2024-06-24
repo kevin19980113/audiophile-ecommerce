@@ -8,8 +8,8 @@ export default function ProductsLayout({
 }>) {
   return (
     <MaxWidthWrapper className="px-8 lg:px-32 flex flex-col">
-      <Navbar />
       <div className="absolute inset-0 bg-black h-[170px] md:h-[250px] -z-10 max-w-screen-2xl mx-auto"></div>
+      <Navbar />
       {children}
     </MaxWidthWrapper>
   );

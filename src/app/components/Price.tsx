@@ -7,6 +7,8 @@ import { useState } from "react";
 import { useToast } from "./ui/use-toast";
 import { ToastAction } from "./ui/toast";
 import Link from "next/link";
+import { LoginLink, useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
+import { useRouter } from "next/navigation";
 
 export default function Price({
   price,
@@ -24,6 +26,8 @@ export default function Price({
   const [quantity, setQuantity] = useState(1);
   const { addItem } = useCart();
   const { toast } = useToast();
+  const { user } = useKindeBrowserClient();
+  const router = useRouter();
 
   const increment = () => {
     setQuantity((prev) => prev + 1);
@@ -35,20 +39,42 @@ export default function Price({
     }
   };
 
+  const handleCheckout = () => {
+    if (!user) {
+      toast({
+        title: "Please Sign in to checkout",
+        description: "Would you like to checkout?",
+        action: (
+          <LoginLink postLoginRedirectURL="/checkout">
+            <ToastAction
+              altText="Sign in"
+              className={cn(buttonVariants(), "whitespace-nowrap")}
+            >
+              Sign in
+            </ToastAction>
+          </LoginLink>
+        ),
+        className:
+          "flex flex-col gap-y-2 items-start text-sm md:flex-row md:gap-x-4 md:items-center",
+      });
+      return;
+    }
+    router.push("/checkout");
+  };
+
   const handleAddToCart = () => {
     addItem(product, quantity);
     toast({
       title: `Added ${product.name} to cart`,
       description: "Would you like to checkout?",
       action: (
-        <Link href="/checkout">
-          <ToastAction
-            altText="Checkout"
-            className={cn(buttonVariants(), "whitespace-nowrap, -ml-4")}
-          >
-            Checkout
-          </ToastAction>
-        </Link>
+        <ToastAction
+          altText="Checkout"
+          className={cn(buttonVariants(), "whitespace-nowrap")}
+          onClick={handleCheckout}
+        >
+          Checkout
+        </ToastAction>
       ),
       className:
         "flex flex-col gap-y-2 items-start text-sm md:flex-row md:gap-x-4 md:items-center",

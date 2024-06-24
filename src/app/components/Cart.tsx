@@ -35,10 +35,10 @@ export default function Cart() {
       title: "Please Sign in to checkout",
       description: "Would you like to checkout?",
       action: (
-        <LoginLink>
+        <LoginLink postLoginRedirectURL="/checkout">
           <ToastAction
             altText="Sign in"
-            className={cn(buttonVariants(), "whitespace-nowrap, -ml-4")}
+            className={cn(buttonVariants(), "whitespace-nowrap")}
           >
             Sign in
           </ToastAction>
@@ -86,9 +86,11 @@ export default function Cart() {
 
         <CartItems mode="cart" />
 
-        <Button className="w-full mt-6" onClick={handleCheckout}>
-          CHECK OUT
-        </Button>
+        {totalAmount > 0 && (
+          <Button className="w-full mt-6" onClick={handleCheckout}>
+            CHECK OUT
+          </Button>
+        )}
       </DialogContent>
     </Dialog>
   );

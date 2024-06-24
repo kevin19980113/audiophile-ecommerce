@@ -14,6 +14,7 @@ import Link from "next/link";
 import { cn, formatPrice } from "@/lib/utils";
 import { ScrollArea } from "./ui/scroll-area";
 import { useCart } from "../hooks/use-cart";
+import { useRouter } from "next/navigation";
 
 export const CheckoutSuccessDialog = forwardRef(function CheckoutSuccessDialog(
   {},
@@ -21,6 +22,7 @@ export const CheckoutSuccessDialog = forwardRef(function CheckoutSuccessDialog(
 ) {
   const dialogTriggerRef = useRef<HTMLButtonElement | null>(null);
   const { items, clearCart } = useCart();
+  const router = useRouter();
 
   useImperativeHandle(
     ref,
@@ -35,7 +37,14 @@ export const CheckoutSuccessDialog = forwardRef(function CheckoutSuccessDialog(
   );
 
   return (
-    <Dialog>
+    <Dialog
+      onOpenChange={(open) => {
+        if (!open) {
+          clearCart();
+          router.push("/checkout/success");
+        }
+      }}
+    >
       <DialogTrigger
         aria-label="dialog-trigger"
         className="hidden"

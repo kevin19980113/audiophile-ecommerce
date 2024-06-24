@@ -4,15 +4,18 @@ import { cn } from "@/lib/utils";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import CartItems from "./CartItems";
-import { Button } from "./ui/button";
+import { Button, buttonVariants } from "./ui/button";
 import { useForm } from "react-hook-form";
 import { CheckoutSchemaType, checkoutSchema } from "@/lib/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRef, useState } from "react";
 import { CheckoutSuccessDialog } from "./CheckoutSuccessDialog";
-import { redirectToCheckout } from "@/lib/actions";
+import { getCheckoutData, redirectToCheckout } from "@/lib/actions";
 import { useToast } from "./ui/use-toast";
 import { CheckCircle2, Loader } from "lucide-react";
+import { useCart } from "../hooks/use-cart";
+import { LoginLink } from "@kinde-oss/kinde-auth-nextjs";
+import { ToastAction } from "@radix-ui/react-toast";
 
 type CheckoutSuccessDialogRef = {
   open: () => void;
@@ -23,6 +26,12 @@ export default function CheckoutForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [isPaySucceed, setIsPaySucceeded] = useState(false);
   const { toast } = useToast();
+  const { items } = useCart();
+
+  const totalAmount = items.reduce(
+    (total, { quantity }) => total + quantity,
+    0
+  );
 
   const {
     register,
@@ -51,18 +60,41 @@ export default function CheckoutForm() {
       setIsPaySucceeded(false);
 
       if (error instanceof Error) {
-        toast({
-          title: "Something went wrong during payment",
-          description: error.message,
-          variant: "destructive",
-        });
+        switch (error.message) {
+          case "Something went wrong, Please try again.":
+            toast({
+              title: "Something went wrong during payment",
+              description: error.message,
+              variant: "destructive",
+            });
+            break;
+          case "User is not authenticated. Please Sign in first.":
+            toast({
+              title: "Please Sign in to checkout",
+              description: error.message,
+              action: (
+                <LoginLink postLoginRedirectURL="/checkout">
+                  <ToastAction
+                    altText="Sign in"
+                    className={cn(buttonVariants(), "whitespace-nowrap")}
+                  >
+                    Sign in
+                  </ToastAction>
+                </LoginLink>
+              ),
+              className:
+                "flex flex-col gap-y-2 items-start text-sm md:flex-row md:gap-x-4 md:items-center",
+            });
+            break;
+        }
       }
       return;
     }
 
     setIsPaySucceeded(true);
-    successDialogRef.current?.open();
+
     setIsLoading(false);
+    successDialogRef.current?.open();
   };
 
   return (
@@ -73,7 +105,7 @@ export default function CheckoutForm() {
       >
         <h1 className="text-xl lg:text-3xl font-semibold">CHECKOUT</h1>
 
-        <form className="flex flex-col gap-y-4">
+        <form className="flex flex-col gap-y-4" action={getCheckoutData}>
           <div className="text-xs lg:text-sm text-orange-500 font-medium mt-8">
             BILLING DETAILS
           </div>
@@ -304,22 +336,26 @@ export default function CheckoutForm() {
           SUMMARY
         </h1>
         <CartItems mode="checkout" />
-        <Button
-          className={`w-full mt-4 flex items-center ${
-            isPaySucceed ? "bg-green-600 transition-all duration-200 ease" : ""
-          }`}
-          onClick={handleSubmit(onSubmit)}
-          disabled={isLoading || isPaySucceed}
-        >
-          {`${!isLoading && !isPaySucceed ? "CONTINUE & PAY" : ""}`}
-          {isLoading && <Loader className="size-6 animate-spin" />}
-          {!isLoading && isPaySucceed && (
-            <div className="flex gap-x-2 items-center">
-              <CheckCircle2 className="size-7 text-white" />
-              <div className="text-sm font-bold">Payed Successfully!!</div>
-            </div>
-          )}
-        </Button>
+        {totalAmount > 0 && (
+          <Button
+            className={`w-full mt-4 flex items-center ${
+              isPaySucceed
+                ? "bg-green-600 transition-all duration-200 ease"
+                : ""
+            }`}
+            onClick={handleSubmit(onSubmit)}
+            disabled={isLoading || isPaySucceed}
+          >
+            {`${!isLoading && !isPaySucceed ? "CONTINUE & PAY" : ""}`}
+            {isLoading && <Loader className="size-6 animate-spin" />}
+            {!isLoading && isPaySucceed && (
+              <div className="flex gap-x-2 items-center">
+                <CheckCircle2 className="size-7 text-white" />
+                <div className="text-sm font-bold">Payed Successfully!!</div>
+              </div>
+            )}
+          </Button>
+        )}
       </div>
 
       <CheckoutSuccessDialog ref={successDialogRef} />
