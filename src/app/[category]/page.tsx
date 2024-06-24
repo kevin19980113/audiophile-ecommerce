@@ -31,6 +31,7 @@ export default function CategoryPage({
             slug={product.slug}
             category={params.category}
             id={product.id}
+            key={`${product.name}-${product.id}`}
           />
         ))}
       </div>

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { buttonVariants } from "./ui/button";
 import Price from "./Price";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 type ProductsReelProps = {
   image: string;
@@ -34,7 +35,14 @@ export default function ProductReel({
           price ? "w-full md:w-full lg:w-10/12" : "w-full sm:w-1/2 lg:w-3/4"
         } md:mx-auto mb-12 lg:mb-0 mx-auto`}
       >
-        <img src={image} alt={title} className="w-full h-auto rounded-md" />
+        <div className="w-full h-[250px] md:h-[400px] rounded-md relative">
+          <Image
+            src={image}
+            alt={title}
+            fill
+            className="absolute object-contain"
+          />
+        </div>
       </div>
 
       <div

@@ -23,6 +23,7 @@ export default function Footer() {
             <Link
               href={section.href}
               className={cn(buttonVariants({ variant: "link" }), "text-white")}
+              key={section.name}
             >
               {section.name.toUpperCase()}
             </Link>
@@ -32,8 +33,8 @@ export default function Footer() {
 
       <p className="max-w-prose text-gray-500 text-center text-sm xl:text-base md:text-left">
         {" "}
-        Audiophile is an all in one stop to fulfill your audio needs. We're a
-        small team of music lovers and sound specialists who are devoted to
+        Audiophile is an all in one stop to fulfill your audio needs. We&apos;re
+        a small team of music lovers and sound specialists who are devoted to
         helping you get the most out of personal audio. Come and visit our demo
         facility - we’re open 7 days a week.
       </p>

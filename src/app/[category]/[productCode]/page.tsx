@@ -70,6 +70,7 @@ export default function ProductDetailPage({
             category={category.category}
             href={category.href}
             image={category.image}
+            key={category.category}
           />
         ))}
       </div>

@@ -28,11 +28,10 @@ export default function RelatedItems({ others }: RelatedItemsProps) {
       <div className="grid grid-cols-1 gap-y-10 md:grid-cols-3 md:gap-x-10">
         {others.map((other, index) => (
           <div key={other.name} className="flex flex-col items-center gap-y-6">
-            <img
-              src={other.image.desktop}
-              alt={other.name}
-              className="rounded-md w-full h-full"
-            />
+            <div className="rounded-md w-full h-full">
+              <img src={other.image.desktop} alt={other.name} />
+            </div>
+
             <h1 className="text-xl lg:text-2xl font-semibold">
               {other.name.toUpperCase()}
             </h1>

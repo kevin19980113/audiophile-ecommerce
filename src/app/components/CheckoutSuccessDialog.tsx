@@ -15,6 +15,7 @@ import { cn, formatPrice } from "@/lib/utils";
 import { ScrollArea } from "./ui/scroll-area";
 import { useCart } from "../hooks/use-cart";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export const CheckoutSuccessDialog = forwardRef(function CheckoutSuccessDialog(
   {},
@@ -78,12 +79,16 @@ export const CheckoutSuccessDialog = forwardRef(function CheckoutSuccessDialog(
                 className="w-full md:w-1/2 px-4 py-3 flex items-center justify-between bg-gray-100 
               rounded-t-md md:rounded-l-md md:rounded-tr-none"
               >
-                <img
-                  src={item.product.image}
-                  alt={item.product.name}
-                  className="size-16 md:size-20 mr-1"
-                />
-                <div className="flex items-start">
+                <div className="size-16 md:size-20 mr-1 relative">
+                  <Image
+                    src={item.product.image}
+                    alt={item.product.name}
+                    fill
+                    className="absolute object-contain"
+                  />
+                </div>
+
+                <div className="flex items-start w-2/3">
                   <div className="grid grid-cols-1">
                     <h3 className="text-sm font-semibold mb-1">
                       {item.product.name}

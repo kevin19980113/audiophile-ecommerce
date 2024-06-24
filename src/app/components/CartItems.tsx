@@ -1,6 +1,7 @@
 import { formatPrice } from "@/lib/utils";
 import { useCart } from "../hooks/use-cart";
 import { ScrollArea } from "./ui/scroll-area";
+import Image from "next/image";
 
 export default function CartItems({ mode }: { mode: "checkout" | "cart" }) {
   const { items, addItem, removeItem } = useCart();
@@ -19,11 +20,14 @@ export default function CartItems({ mode }: { mode: "checkout" | "cart" }) {
               className="w-full flex items-center justify-between gap-x-6"
             >
               <div className="flex items-center gap-x-3 w-full">
-                <img
-                  src={item.product.image}
-                  alt={item.product.name}
-                  className="size-12 md:size-20 xl:size-24 rounded-md"
-                />
+                <div className="size-12 md:size-20 xl:size-24 rounded-md relative">
+                  <Image
+                    src={item.product.image}
+                    alt={item.product.name}
+                    fill
+                    className="absolute object-contain"
+                  />
+                </div>
 
                 <div className="flex items-start justify-between gap-x-4 w-full">
                   <div className="flex flex-col items-start">
