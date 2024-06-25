@@ -360,9 +360,9 @@ export default function CheckoutForm() {
                 className="size-10 md:size-14"
               />
               <p className="text-muted-foreground font-medium text-sm xl:text-base">
-                The 'Cash on Delivery' option enables you to pay in cash when
-                our delivery courier arrives at your residence. Just make sure
-                your address is correct so that your order will not be
+                The &apos;Cash on Delivery&apos; option enables you to pay in
+                cash when our delivery courier arrives at your residence. Just
+                make sure your address is correct so that your order will not be
                 cancelled.
               </p>
             </div>
