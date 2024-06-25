@@ -5,12 +5,12 @@ import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import CartItems from "./CartItems";
 import { Button, buttonVariants } from "./ui/button";
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import { CheckoutSchemaType, checkoutSchema } from "@/lib/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRef, useState } from "react";
 import { CheckoutSuccessDialog } from "./CheckoutSuccessDialog";
-import { getCheckoutData, redirectToCheckout } from "@/lib/actions";
+import { checkout } from "@/lib/actions";
 import { useToast } from "./ui/use-toast";
 import { CheckCircle2, Loader } from "lucide-react";
 import { useCart } from "../hooks/use-cart";
@@ -23,7 +23,6 @@ type CheckoutSuccessDialogRef = {
 
 export default function CheckoutForm() {
   const successDialogRef = useRef<CheckoutSuccessDialogRef | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
   const [isPaySucceed, setIsPaySucceeded] = useState(false);
   const { toast } = useToast();
   const { items } = useCart();
@@ -36,13 +35,14 @@ export default function CheckoutForm() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     setValue,
     getValues,
     watch,
   } = useForm<CheckoutSchemaType>({
     resolver: zodResolver(checkoutSchema),
   });
+  //validating info on client side(handleSubmit with zod schema)
 
   const paymentMethod = watch("paymentMethod");
 
@@ -50,51 +50,46 @@ export default function CheckoutForm() {
     setValue("paymentMethod", value);
   };
 
-  const onSubmit = async (data: CheckoutSchemaType) => {
-    setIsLoading(true);
+  const onSubmit = async (checkoutData: CheckoutSchemaType) => {
+    setIsPaySucceeded(false);
 
-    try {
-      await redirectToCheckout();
-    } catch (error) {
-      setIsLoading(false);
-      setIsPaySucceeded(false);
+    const result = await checkout(checkoutData);
 
-      if (error instanceof Error) {
-        switch (error.message) {
-          case "Something went wrong, Please try again.":
-            toast({
-              title: "Something went wrong during payment",
-              description: error.message,
-              variant: "destructive",
-            });
-            break;
-          case "User is not authenticated. Please Sign in first.":
-            toast({
-              title: "Please Sign in to checkout",
-              description: error.message,
-              action: (
-                <LoginLink postLoginRedirectURL="/checkout">
-                  <ToastAction
-                    altText="Sign in"
-                    className={cn(buttonVariants(), "whitespace-nowrap")}
-                  >
-                    Sign in
-                  </ToastAction>
-                </LoginLink>
-              ),
-              className:
-                "flex flex-col gap-y-2 items-start text-sm md:flex-row md:gap-x-4 md:items-center",
-            });
-            break;
-        }
-      }
-      return;
+    switch (result.message) {
+      case "Payment Succeed":
+        setIsPaySucceeded(true);
+        successDialogRef.current?.open();
+        break;
+      case "Payment Failed":
+        toast({
+          title: result.message,
+          description:
+            "something went wrong during payment process, please try again",
+          variant: "destructive",
+        });
+        break;
+      case "Checkout information is invalid":
+        //one more handling validation errors which are from server side
+        break;
+      case "User is not authenticated":
+        toast({
+          title: result.message,
+          description: "please sign in to checkout",
+          action: (
+            <LoginLink postLoginRedirectURL="/checkout">
+              <ToastAction
+                altText="Sign in"
+                className={cn(buttonVariants(), "whitespace-nowrap")}
+              >
+                Sign in
+              </ToastAction>
+            </LoginLink>
+          ),
+          className:
+            "flex flex-col gap-y-2 items-start text-sm md:flex-row md:gap-x-4 md:items-center",
+        });
+        break;
     }
-
-    setIsPaySucceeded(true);
-
-    setIsLoading(false);
-    successDialogRef.current?.open();
   };
 
   return (
@@ -105,7 +100,7 @@ export default function CheckoutForm() {
       >
         <h1 className="text-xl lg:text-3xl font-semibold">CHECKOUT</h1>
 
-        <form className="flex flex-col gap-y-4" action={getCheckoutData}>
+        <form className="flex flex-col gap-y-4">
           <div className="text-xs lg:text-sm text-orange-500 font-medium mt-8">
             BILLING DETAILS
           </div>
@@ -121,6 +116,7 @@ export default function CheckoutForm() {
                   "focus-visible:ring-red-500": errors.name,
                 })}
                 placeholder="YOUR NAME"
+                disabled={isSubmitting}
               />
               {errors?.name && (
                 <p className="text-sm text-red-500">{errors.name.message}</p>
@@ -137,6 +133,7 @@ export default function CheckoutForm() {
                   "focus-visible:ring-red-500": errors.email,
                 })}
                 placeholder="YOUR EMAIL ADDRESS"
+                disabled={isSubmitting}
               />
               {errors?.email && (
                 <p className="text-sm text-red-500">{errors.email.message}</p>
@@ -153,6 +150,7 @@ export default function CheckoutForm() {
                   "focus-visible:ring-red-500": errors.phoneNumber,
                 })}
                 placeholder="YOUR PHONE NUMBER"
+                disabled={isSubmitting}
               />
               {errors?.phoneNumber && (
                 <p className="text-sm text-red-500">
@@ -177,6 +175,7 @@ export default function CheckoutForm() {
                   "focus-visible:ring-red-500": errors.address,
                 })}
                 placeholder="YOUR ADDRESS"
+                disabled={isSubmitting}
               />
               {errors?.address && (
                 <p className="text-sm text-red-500">{errors.address.message}</p>
@@ -193,6 +192,7 @@ export default function CheckoutForm() {
                   "focus-visible:ring-red-500": errors.zipCode,
                 })}
                 placeholder="YOUR ZIP CODE"
+                disabled={isSubmitting}
               />
               {errors?.zipCode && (
                 <p className="text-sm text-red-500">{errors.zipCode.message}</p>
@@ -209,6 +209,7 @@ export default function CheckoutForm() {
                   "focus-visible:ring-red-500": errors.city,
                 })}
                 placeholder="YOUR CITY"
+                disabled={isSubmitting}
               />
               {errors?.city && (
                 <p className="text-sm text-red-500">{errors.city.message}</p>
@@ -225,6 +226,7 @@ export default function CheckoutForm() {
                   "focus-visible:ring-red-500": errors.country,
                 })}
                 placeholder="YOUR COUNTRY"
+                disabled={isSubmitting}
               />
               {errors?.country && (
                 <p className="text-sm text-red-500">{errors.country.message}</p>
@@ -247,7 +249,10 @@ export default function CheckoutForm() {
 
               <div className="flex flex-col gap-y-4">
                 <div
-                  className="flex items-center space-x-2 border-2 border-input rounded-md px-2 py-4 cursor-pointer has-[:checked]:border-orange-500 md:ml-2"
+                  className={`flex items-center space-x-2 border-2 border-input rounded-md px-2 py-4 
+                  cursor-pointer has-[:checked]:border-orange-500 md:ml-2 ${
+                    isSubmitting ? "pointer-events-none" : ""
+                  }`}
                   onClick={() => handleRadioClick("eMoney")}
                 >
                   <input
@@ -264,7 +269,10 @@ export default function CheckoutForm() {
                 </div>
 
                 <div
-                  className="flex items-center space-x-2 border-2 border-input rounded-md px-2 py-4 cursor-pointer has-[:checked]:border-orange-500 md:ml-2"
+                  className={`flex items-center space-x-2 border-2 border-input rounded-md px-2 py-4 
+                  cursor-pointer has-[:checked]:border-orange-500 md:ml-2 ${
+                    isSubmitting ? "pointer-events-none" : ""
+                  }`}
                   onClick={() => handleRadioClick("cashOnDelivery")}
                 >
                   <input
@@ -297,6 +305,7 @@ export default function CheckoutForm() {
                   "focus-visible:ring-red-500": errors.eMoneyNumber,
                 })}
                 placeholder="YOUR EMONEY NUMBER"
+                disabled={isSubmitting}
               />
               {errors?.eMoneyNumber && (
                 <p className="text-sm text-red-500">
@@ -315,6 +324,7 @@ export default function CheckoutForm() {
                   "focus-visible:ring-red-500": errors.eMoneyPin,
                 })}
                 placeholder="YOUR EMONEY PIN"
+                disabled={isSubmitting}
               />
               {errors?.eMoneyPin && (
                 <p className="text-sm text-red-500">
@@ -344,11 +354,11 @@ export default function CheckoutForm() {
                 : ""
             }`}
             onClick={handleSubmit(onSubmit)}
-            disabled={isLoading || isPaySucceed}
+            disabled={isSubmitting || isPaySucceed}
           >
-            {`${!isLoading && !isPaySucceed ? "CONTINUE & PAY" : ""}`}
-            {isLoading && <Loader className="size-6 animate-spin" />}
-            {!isLoading && isPaySucceed && (
+            {`${!isSubmitting && !isPaySucceed ? "CONTINUE & PAY" : ""}`}
+            {isSubmitting && <Loader className="size-6 animate-spin" />}
+            {!isSubmitting && isPaySucceed && (
               <div className="flex gap-x-2 items-center">
                 <CheckCircle2 className="size-7 text-white" />
                 <div className="text-sm font-bold">Payed Successfully!!</div>

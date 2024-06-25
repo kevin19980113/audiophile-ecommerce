@@ -1,49 +1,46 @@
 "use server";
 
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import { redirect } from "next/navigation";
+import { CheckoutSchemaType, checkoutSchema } from "./schema";
 
-export const redirectToCheckout = async () => {
-  // assume we will redirect to the checkout page //
-  //assume we send request to server
-
+export const checkout = async (checkoutData: CheckoutSchemaType) => {
   //auth check
   const { isAuthenticated } = getKindeServerSession();
 
   if (!(await isAuthenticated())) {
-    throw new Error("User is not authenticated. Please Sign in first.");
+    return { message: "User is not authenticated" };
   }
 
-  await new Promise((resolve) => setTimeout(resolve, 3000));
-
-  //if something went wrong, throw an error
-  if (false) {
-    throw new Error("Something went wrong, Please try again.");
+  //validate user information
+  const parsedCustomerCheckoutData = checkoutSchema.safeParse(checkoutData);
+  if (!parsedCustomerCheckoutData.success) {
+    return {
+      message: "Checkout information is invalid",
+      errors: parsedCustomerCheckoutData.error.flatten().fieldErrors,
+    };
   }
 
-  //return redirect("/checkout/success");
+  //assume we send request to server to checkout
+  try {
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+  } catch (err) {
+    return { message: "Payment Failed" };
+  }
 
-  return;
+  //update checkout info
+  // try{
+  //   const name = checkoutData.name
+  //   const email = checkoutData.email
+  //   const phoneNumber = checkoutData.phoneNumber
+  //   ...
+  //   await prisma.userCheckoutInfo.create({data:{
+  //     name,
+  //     email,
+  //     phoneNumber,
+  //    ...
+  //   }catch(err){
+  //     return "An error occured. Please try again."
+  //   }
+
+  return { message: "Payment Succeed" };
 };
-
-export async function getCheckoutData(formData: FormData) {
-  console.log(formData);
-
-  //auth check
-  const { isAuthenticated } = getKindeServerSession();
-  if (!(await isAuthenticated())) {
-    redirect("/api/auth/login");
-  }
-
-  //update db ,,,,,
-  //await prisma.customerCheckoutInfo.update({
-  //where: {
-  //id: "1",
-  //},
-  //data: {
-  //name: formData.get("name"),
-  //email: formData.get("email"),
-  //phone: formData.get("phone"),
-  //address: formData.get("address"),
-  // ......
-}
