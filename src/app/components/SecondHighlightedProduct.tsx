@@ -42,7 +42,7 @@ export default function SecondHighlightedProduct() {
         <Link
           href="/speakers/zx7-speaker"
           className="w-36 py-2 bg-transparent text-sm border border-black font-semibold
-           whitespace-nowrap text-center hover:bg-gray-100 md:w-52 md:py-4 md:text-base cursor-pointer"
+           whitespace-nowrap text-center hover:bg-black hover:text-white md:w-52 md:py-4 md:text-base cursor-pointer"
         >
           SEE PRODUCT
         </Link>

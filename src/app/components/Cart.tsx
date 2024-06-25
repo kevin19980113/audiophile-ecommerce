@@ -68,6 +68,7 @@ export default function Cart() {
       <DialogContent
         className="rounded-lg max-w-[280px] sm:max-w-md overflow-y-scroll max-h-screen"
         aria-describedby={undefined}
+        onOpenAutoFocus={(e) => e.preventDefault()}
       >
         <DialogHeader>
           <DialogTitle>

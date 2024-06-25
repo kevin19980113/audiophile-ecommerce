@@ -5,7 +5,7 @@ import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import CartItems from "./CartItems";
 import { Button, buttonVariants } from "./ui/button";
-import { set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { CheckoutSchemaType, checkoutSchema } from "@/lib/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRef, useState } from "react";
