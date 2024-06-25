@@ -19,12 +19,22 @@ export const checkoutSchema = z
     zipCode: z.string().regex(/^[A-Za-z0-9]{3} [A-Za-z0-9]{3}$/, {
       message: "Please enter a valid zip code",
     }),
-    city: z.string().min(1, {
-      message: "City is required",
-    }),
-    country: z.string().min(1, {
-      message: "Country is required",
-    }),
+    city: z
+      .string()
+      .regex(/^[A-Za-z\s]+$/, {
+        message: "City should only contain alphabetic characters",
+      })
+      .min(1, {
+        message: "City is required",
+      }),
+    country: z
+      .string()
+      .regex(/^[A-Za-z\s]+$/, {
+        message: "Country should only contain alphabetic characters",
+      })
+      .min(1, {
+        message: "Country is required",
+      }),
     paymentMethod: z.string({
       message: "Please select a payment method",
     }),
