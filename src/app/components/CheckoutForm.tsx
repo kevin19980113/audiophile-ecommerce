@@ -16,6 +16,8 @@ import { CheckCircle2, Loader } from "lucide-react";
 import { useCart } from "../hooks/use-cart";
 import { LoginLink } from "@kinde-oss/kinde-auth-nextjs";
 import { ToastAction } from "@radix-ui/react-toast";
+import Image from "next/image";
+import cashOnDeliveryIcon from "../../../public/assets/checkout/icon-cash-on-delivery.svg";
 
 type CheckoutSuccessDialogRef = {
   open: () => void;
@@ -38,6 +40,7 @@ export default function CheckoutForm() {
     formState: { errors, isSubmitting },
     setValue,
     getValues,
+    trigger,
     watch,
   } = useForm<CheckoutSchemaType>({
     resolver: zodResolver(checkoutSchema),
@@ -49,6 +52,13 @@ export default function CheckoutForm() {
   const handleRadioClick = (value: string) => {
     setValue("paymentMethod", value);
   };
+
+  const handleUppercaseChange =
+    (field: keyof CheckoutSchemaType) =>
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setValue(field, e.target.value.toUpperCase());
+      trigger(field);
+    };
 
   const onSubmit = async (checkoutData: CheckoutSchemaType) => {
     setIsPaySucceeded(false);
@@ -149,7 +159,7 @@ export default function CheckoutForm() {
                 className={cn({
                   "focus-visible:ring-red-500": errors.phoneNumber,
                 })}
-                placeholder="YOUR PHONE NUMBER"
+                placeholder="+1 555 555-5555"
                 disabled={isSubmitting}
               />
               {errors?.phoneNumber && (
@@ -174,8 +184,9 @@ export default function CheckoutForm() {
                 className={cn({
                   "focus-visible:ring-red-500": errors.address,
                 })}
-                placeholder="YOUR ADDRESS"
+                placeholder="123 ABC STREET"
                 disabled={isSubmitting}
+                onChange={handleUppercaseChange("address")}
               />
               {errors?.address && (
                 <p className="text-sm text-red-500">{errors.address.message}</p>
@@ -191,8 +202,9 @@ export default function CheckoutForm() {
                 className={cn({
                   "focus-visible:ring-red-500": errors.zipCode,
                 })}
-                placeholder="YOUR ZIP CODE"
+                placeholder="A1B 3DF"
                 disabled={isSubmitting}
+                onChange={handleUppercaseChange("zipCode")}
               />
               {errors?.zipCode && (
                 <p className="text-sm text-red-500">{errors.zipCode.message}</p>
@@ -208,8 +220,9 @@ export default function CheckoutForm() {
                 className={cn({
                   "focus-visible:ring-red-500": errors.city,
                 })}
-                placeholder="YOUR CITY"
+                placeholder="TORONTO"
                 disabled={isSubmitting}
+                onChange={handleUppercaseChange("city")}
               />
               {errors?.city && (
                 <p className="text-sm text-red-500">{errors.city.message}</p>
@@ -225,8 +238,9 @@ export default function CheckoutForm() {
                 className={cn({
                   "focus-visible:ring-red-500": errors.country,
                 })}
-                placeholder="YOUR COUNTRY"
+                placeholder="CANADA"
                 disabled={isSubmitting}
+                onChange={handleUppercaseChange("country")}
               />
               {errors?.country && (
                 <p className="text-sm text-red-500">{errors.country.message}</p>
@@ -295,44 +309,64 @@ export default function CheckoutForm() {
               </div>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="eMoneyNumber" className="font-bold">
-                e-Money Number
-              </Label>
-              <Input
-                {...register("eMoneyNumber")}
-                className={cn({
-                  "focus-visible:ring-red-500": errors.eMoneyNumber,
-                })}
-                placeholder="YOUR EMONEY NUMBER"
-                disabled={isSubmitting}
-              />
-              {errors?.eMoneyNumber && (
-                <p className="text-sm text-red-500">
-                  {errors.eMoneyNumber.message}
-                </p>
-              )}
-            </div>
+            {paymentMethod === "eMoney" && (
+              <>
+                <div className="space-y-2">
+                  <Label htmlFor="eMoneyNumber" className="font-bold">
+                    e-Money Number
+                  </Label>
+                  <Input
+                    {...register("eMoneyNumber")}
+                    className={cn({
+                      "focus-visible:ring-red-500": errors.eMoneyNumber,
+                    })}
+                    placeholder="12345678"
+                    disabled={isSubmitting}
+                  />
+                  {errors?.eMoneyNumber && (
+                    <p className="text-sm text-red-500">
+                      {errors.eMoneyNumber.message}
+                    </p>
+                  )}
+                </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="eMoneyPin" className="font-bold">
-                e-Money PIN
-              </Label>
-              <Input
-                {...register("eMoneyPin")}
-                className={cn({
-                  "focus-visible:ring-red-500": errors.eMoneyPin,
-                })}
-                placeholder="YOUR EMONEY PIN"
-                disabled={isSubmitting}
-              />
-              {errors?.eMoneyPin && (
-                <p className="text-sm text-red-500">
-                  {errors.eMoneyPin.message}
-                </p>
-              )}
-            </div>
+                <div className="space-y-2">
+                  <Label htmlFor="eMoneyPin" className="font-bold">
+                    e-Money PIN
+                  </Label>
+                  <Input
+                    {...register("eMoneyPin")}
+                    className={cn({
+                      "focus-visible:ring-red-500": errors.eMoneyPin,
+                    })}
+                    placeholder="1234"
+                    disabled={isSubmitting}
+                  />
+                  {errors?.eMoneyPin && (
+                    <p className="text-sm text-red-500">
+                      {errors.eMoneyPin.message}
+                    </p>
+                  )}
+                </div>
+              </>
+            )}
           </div>
+
+          {paymentMethod === "cashOnDelivery" && (
+            <div className="flex items-start justify-between gap-x-4 mt-4">
+              <Image
+                src={cashOnDeliveryIcon}
+                alt="cash on delivery"
+                className="size-10 md:size-14"
+              />
+              <p className="text-muted-foreground font-medium text-sm xl:text-base">
+                The 'Cash on Delivery' option enables you to pay in cash when
+                our delivery courier arrives at your residence. Just make sure
+                your address is correct so that your order will not be
+                cancelled.
+              </p>
+            </div>
+          )}
 
           <div></div>
         </form>

@@ -41,8 +41,8 @@ export const CheckoutSuccessDialog = forwardRef(function CheckoutSuccessDialog(
     <Dialog
       onOpenChange={(open) => {
         if (!open) {
-          clearCart();
           router.push("/checkout/success");
+          clearCart();
         }
       }}
     >

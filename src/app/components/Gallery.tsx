@@ -20,6 +20,7 @@ export default function Gallery({
             index / 2 === 1 ? 2 : 1
           } sm:row-start-${(index + 1) % 2 === 1 ? 1 : 2} 
           ${index === 1 ? "sm:row-span-2" : ""}`}
+          loading="lazy"
         />
       ))}
     </div>
