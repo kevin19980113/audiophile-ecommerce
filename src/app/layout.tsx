@@ -23,7 +23,7 @@ export default function RootLayout({
         <main className="flex flex-col min-h-screen">
           <div className="flex-grow flex-1">
             {children}
-            <Toaster position="bottom-center" />
+            <Toaster position="bottom-center" expand visibleToasts={2} />
             <Footer />
           </div>
         </main>
