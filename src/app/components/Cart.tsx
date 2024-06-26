@@ -15,19 +15,24 @@ import { LoginLink, useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { useState } from "react";
 
 export default function Cart() {
   const { items, clearCart } = useCart();
   const { user } = useKindeBrowserClient();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const router = useRouter();
 
   const totalAmount = items.reduce((acc, item) => acc + item.quantity, 0);
 
   const handleCheckout = () => {
     if (user) {
+      setIsDialogOpen(false);
       router.push("/checkout");
+
       return;
     }
+
     const toastId = toast(
       <div className="flex flex-col items-start gap-y-1">
         <div className="flex gap-x-2 items-center">
@@ -48,10 +53,11 @@ export default function Cart() {
         </LoginLink>
       </div>
     );
+    setIsDialogOpen(false);
   };
 
   return (
-    <Dialog>
+    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger className="group" asChild>
         <div className="flex items-start gap-x-1 cursor-pointer relative">
           {totalAmount > 0 && (
