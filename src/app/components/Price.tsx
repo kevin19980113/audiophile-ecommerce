@@ -9,6 +9,7 @@ import { ToastAction } from "./ui/toast";
 import { LoginLink, useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import Link from "next/link";
 
 export default function Price({
   price,
@@ -81,13 +82,17 @@ export default function Price({
     //   className:
     //     "flex flex-col gap-y-2 items-start text-sm md:flex-row md:gap-x-4 md:items-center",
     // });
-    toast("Please Sign in to checkout", {
-      description: "Would you like to checkout?",
-      action: {
-        label: "Checkout",
-        onClick: () => handleCheckout(),
-      },
-    });
+    toast(
+      <div className="flex flex-col items-start gap-y-1">
+        <div className="text-sm font-semibold">
+          Would you like to check out?
+        </div>
+        <div className="text-sm">Please Sign in to check out</div>
+        <LoginLink className={cn(buttonVariants(), "mt-2 px-4 py-1")}>
+          Sign in
+        </LoginLink>
+      </div>
+    );
   };
 
   return (
