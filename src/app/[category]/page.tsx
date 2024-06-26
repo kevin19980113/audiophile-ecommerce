@@ -17,7 +17,7 @@ export default function CategoryPage({
 
   return (
     <>
-      <div className="text-white text-2xl md:text-3xl lg:text-4xl font-medium mx-auto py-8 md:py-16">
+      <div className="text-white text-2xl md:text-3xl lg:text-4xl font-medium mx-auto py-8 md:py-16 text-center">
         {params.category.toUpperCase()}
       </div>
 

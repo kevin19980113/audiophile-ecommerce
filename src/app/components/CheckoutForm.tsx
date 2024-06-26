@@ -4,20 +4,18 @@ import { cn } from "@/lib/utils";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import CartItems from "./CartItems";
-import { Button, buttonVariants } from "./ui/button";
+import { Button } from "./ui/button";
 import { useForm } from "react-hook-form";
 import { CheckoutSchemaType, checkoutSchema } from "@/lib/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRef, useState } from "react";
 import { CheckoutSuccessDialog } from "./CheckoutSuccessDialog";
 import { checkout } from "@/lib/actions";
-import { useToast } from "./ui/use-toast";
 import { CheckCircle2, Loader } from "lucide-react";
 import { useCart } from "../hooks/use-cart";
-import { LoginLink } from "@kinde-oss/kinde-auth-nextjs";
-import { ToastAction } from "@radix-ui/react-toast";
 import Image from "next/image";
 import cashOnDeliveryIcon from "../../../public/assets/checkout/icon-cash-on-delivery.svg";
+import { toast } from "sonner";
 
 type CheckoutSuccessDialogRef = {
   open: () => void;
@@ -26,7 +24,6 @@ type CheckoutSuccessDialogRef = {
 export default function CheckoutForm() {
   const successDialogRef = useRef<CheckoutSuccessDialogRef | null>(null);
   const [isPaySucceed, setIsPaySucceeded] = useState(false);
-  const { toast } = useToast();
   const { items } = useCart();
 
   const totalAmount = items.reduce(
@@ -71,33 +68,15 @@ export default function CheckoutForm() {
         successDialogRef.current?.open();
         break;
       case "Payment Failed":
-        toast({
-          title: result.message,
-          description:
-            "something went wrong during payment process, please try again",
-          variant: "destructive",
-        });
+        toast.error(
+          "something went wrong during payment process, please try again"
+        );
         break;
       case "Checkout information is invalid":
         //one more handling validation errors which are from server side
         break;
       case "User is not authenticated":
-        toast({
-          title: result.message,
-          description: "please sign in to checkout",
-          action: (
-            <LoginLink postLoginRedirectURL="/checkout">
-              <ToastAction
-                altText="Sign in"
-                className={cn(buttonVariants(), "whitespace-nowrap")}
-              >
-                Sign in
-              </ToastAction>
-            </LoginLink>
-          ),
-          className:
-            "flex flex-col gap-y-2 items-start text-sm md:flex-row md:gap-x-4 md:items-center",
-        });
+        toast.warning("Please sign in to checkout");
         break;
     }
   };

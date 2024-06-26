@@ -8,20 +8,18 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/app/components/ui/dialog";
-import { cn } from "@/lib/utils";
-import { ShoppingCart } from "lucide-react";
+import { InfoIcon, ShoppingCart } from "lucide-react";
 import { useCart } from "../hooks/use-cart";
 import CartItems from "./CartItems";
 import { LoginLink, useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { useRouter } from "next/navigation";
-import { useToast } from "./ui/use-toast";
-import { ToastAction } from "./ui/toast";
+import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 
 export default function Cart() {
   const { items, clearCart } = useCart();
   const { user } = useKindeBrowserClient();
   const router = useRouter();
-  const { toast } = useToast();
 
   const totalAmount = items.reduce((acc, item) => acc + item.quantity, 0);
 
@@ -30,23 +28,26 @@ export default function Cart() {
       router.push("/checkout");
       return;
     }
+    const toastId = toast(
+      <div className="flex flex-col items-start gap-y-1">
+        <div className="flex gap-x-2 items-center">
+          <InfoIcon className="size-4 text-orange-500" />
+          <div className="text-sm font-semibold">
+            Please sign in to check out
+          </div>
+        </div>
 
-    toast({
-      title: "Please Sign in to checkout",
-      description: "Would you like to checkout?",
-      action: (
-        <LoginLink postLoginRedirectURL="/checkout">
-          <ToastAction
-            altText="Sign in"
-            className={cn(buttonVariants(), "whitespace-nowrap")}
-          >
-            Sign in
-          </ToastAction>
+        <LoginLink
+          postLoginRedirectURL="/checkout"
+          className={cn(buttonVariants(), "px-6 py-1 mt-2")}
+          onClick={() => {
+            toast.dismiss(toastId);
+          }}
+        >
+          Sign in
         </LoginLink>
-      ),
-      className:
-        "flex flex-col gap-y-2 items-start text-sm md:flex-row md:gap-x-4 md:items-center",
-    });
+      </div>
+    );
   };
 
   return (

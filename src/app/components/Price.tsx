@@ -4,12 +4,10 @@ import { cn, formatPrice } from "@/lib/utils";
 import { Button, buttonVariants } from "./ui/button";
 import { useCart } from "../hooks/use-cart";
 import { useState } from "react";
-import { useToast } from "./ui/use-toast";
-import { ToastAction } from "./ui/toast";
 import { LoginLink, useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import Link from "next/link";
+import { CheckCircle, InfoIcon } from "lucide-react";
 
 export default function Price({
   price,
@@ -42,24 +40,26 @@ export default function Price({
 
   const handleCheckout = () => {
     if (!user) {
-      // toast({
-      //   title: "Please Sign in to checkout",
-      //   description: "Would you like to checkout?",
-      //   action: (
-      //     <LoginLink postLoginRedirectURL="/checkout">
-      //       <ToastAction
-      //         altText="Sign in"
-      //         className={cn(buttonVariants(), "whitespace-nowrap")}
-      //         autoFocus={true}
-      //       >
-      //         Sign in
-      //       </ToastAction>
-      //     </LoginLink>
-      //   ),
-      //   className:
-      //     "flex flex-col gap-y-2 items-start text-sm md:flex-row md:gap-x-4 md:items-center",
-      // });
+      const toastId = toast(
+        <div className="flex flex-col items-start gap-y-1">
+          <div className="flex gap-x-2 items-center">
+            <InfoIcon className="size-4 text-orange-500" />
+            <div className="text-sm font-semibold">
+              Please sign in to check out
+            </div>
+          </div>
 
+          <LoginLink
+            postLoginRedirectURL="/checkout"
+            className={cn(buttonVariants(), "px-6 py-1 mt-2")}
+            onClick={() => {
+              toast.dismiss(toastId);
+            }}
+          >
+            Sign in
+          </LoginLink>
+        </div>
+      );
       return;
     }
     router.push("/checkout");
@@ -67,30 +67,20 @@ export default function Price({
 
   const handleAddToCart = () => {
     addItem(product, quantity);
-    // toast({
-    //   title: `Added ${product.name} to cart`,
-    //   description: "Would you like to checkout?",
-    //   action: (
-    //     <ToastAction
-    //       altText="Checkout"
-    //       className={cn(buttonVariants(), "whitespace-nowrap")}
-    //       onClick={handleCheckout}
-    //     >
-    //       Checkout
-    //     </ToastAction>
-    //   ),
-    //   className:
-    //     "flex flex-col gap-y-2 items-start text-sm md:flex-row md:gap-x-4 md:items-center",
-    // });
-    toast(
+    const toastId = toast(
       <div className="flex flex-col items-start gap-y-1">
-        <div className="text-sm font-semibold">
-          Would you like to check out?
-        </div>
-        <div className="text-sm">Please Sign in to check out</div>
-        <LoginLink className={cn(buttonVariants(), "mt-2 px-4 py-1")}>
-          Sign in
-        </LoginLink>
+        <CheckCircle className="size-4 text-orange-500" />
+        <div className="text-sm font-semibold">Added it to your cart</div>
+        <div className="text-sm">Would you like to check out?</div>
+        <Button
+          className="px-4 py-1 mt-2"
+          onClick={() => {
+            toast.dismiss(toastId);
+            handleCheckout();
+          }}
+        >
+          Check out
+        </Button>
       </div>
     );
   };
