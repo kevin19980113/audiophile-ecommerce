@@ -9,7 +9,7 @@ type Product = {
   price: number;
 };
 
-type CartItem = {
+export type CartItem = {
   product: Product;
   quantity: number;
 };

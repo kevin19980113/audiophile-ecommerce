@@ -24,3 +24,25 @@ export function formatPrice({ price, options }: FormatPrice) {
     maximumFractionDigits,
   }).format(numericPrice);
 }
+
+export const generateTrackingNumber = () => {
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+  let trackingNumber = "";
+
+  for (let i = 0; i < 10; i++) {
+    trackingNumber += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+
+  return trackingNumber;
+};
+
+export const generateOrderNumber = () => {
+  let orderNumber = "";
+
+  for (let i = 0; i < 12; i++) {
+    orderNumber += Math.floor(Math.random() * 10).toString();
+  }
+
+  return orderNumber;
+};

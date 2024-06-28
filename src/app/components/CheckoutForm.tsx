@@ -10,7 +10,7 @@ import { CheckoutSchemaType, checkoutSchema } from "@/lib/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRef, useState } from "react";
 import { CheckoutSuccessDialog } from "./CheckoutSuccessDialog";
-import { checkout } from "@/lib/actions";
+import { checkout, sendEmail } from "@/lib/actions";
 import { CheckCircle2, Loader } from "lucide-react";
 import { useCart } from "../hooks/use-cart";
 import Image from "next/image";
@@ -64,6 +64,18 @@ export default function CheckoutForm() {
 
     switch (result.message) {
       case "Payment Succeed":
+        const { errorMessage } = await sendEmail(
+          checkoutData,
+          items,
+          result.trackingNumber,
+          result.orderNumber
+        );
+
+        if (errorMessage) {
+          toast.error(errorMessage);
+          //payment is okay but email is not sent
+        }
+
         setIsPaySucceeded(true);
         successDialogRef.current?.open();
         break;
