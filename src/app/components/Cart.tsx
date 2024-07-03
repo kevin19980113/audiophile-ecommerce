@@ -9,21 +9,25 @@ import {
   DialogTrigger,
 } from "@/app/components/ui/dialog";
 import { InfoIcon, ShoppingCart } from "lucide-react";
-import { useCart } from "../hooks/use-cart";
+import { useCartStore } from "../../hooks/use-cart";
 import CartItems from "./CartItems";
 import { LoginLink, useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
+import { useShallow } from "zustand/react/shallow";
 
 export default function Cart() {
-  const { items, clearCart } = useCart();
+  const { totalAmount, clearCart } = useCartStore(
+    useShallow((state) => ({
+      totalAmount: state.totalAmount,
+      clearCart: state.clearCart,
+    }))
+  );
   const { user } = useKindeBrowserClient();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const router = useRouter();
-
-  const totalAmount = items.reduce((acc, item) => acc + item.quantity, 0);
 
   const handleCheckout = () => {
     if (user) {

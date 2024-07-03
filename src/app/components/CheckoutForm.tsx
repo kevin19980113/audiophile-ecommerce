@@ -12,10 +12,11 @@ import { useRef, useState } from "react";
 import { CheckoutSuccessDialog } from "./CheckoutSuccessDialog";
 import { checkout, sendEmail } from "@/lib/actions";
 import { CheckCircle2, Loader } from "lucide-react";
-import { useCart } from "../hooks/use-cart";
+import { useCartStore } from "../../hooks/use-cart";
 import Image from "next/image";
 import cashOnDeliveryIcon from "../../../public/assets/checkout/icon-cash-on-delivery.svg";
 import { toast } from "sonner";
+import { useShallow } from "zustand/react/shallow";
 
 type CheckoutSuccessDialogRef = {
   open: () => void;
@@ -24,11 +25,11 @@ type CheckoutSuccessDialogRef = {
 export default function CheckoutForm() {
   const successDialogRef = useRef<CheckoutSuccessDialogRef | null>(null);
   const [isPaySucceed, setIsPaySucceeded] = useState(false);
-  const { items } = useCart();
-
-  const totalAmount = items.reduce(
-    (total, { quantity }) => total + quantity,
-    0
+  const { items, totalAmount } = useCartStore(
+    useShallow((state) => ({
+      items: state.items,
+      totalAmount: state.totalAmount,
+    }))
   );
 
   const {

@@ -2,12 +2,13 @@
 
 import { cn, formatPrice } from "@/lib/utils";
 import { Button, buttonVariants } from "./ui/button";
-import { useCart } from "../hooks/use-cart";
+import { useCartStore } from "../../hooks/use-cart";
 import { useState } from "react";
 import { LoginLink, useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { CheckCircle, InfoIcon } from "lucide-react";
+import { useShallow } from "zustand/react/shallow";
 
 export default function Price({
   price,
@@ -23,7 +24,11 @@ export default function Price({
   };
 }) {
   const [quantity, setQuantity] = useState(1);
-  const { addItem } = useCart();
+  const { addItem } = useCartStore(
+    useShallow((state) => ({
+      addItem: state.addItem,
+    }))
+  );
   //const { toast } = useToast();
   const { user } = useKindeBrowserClient();
   const router = useRouter();

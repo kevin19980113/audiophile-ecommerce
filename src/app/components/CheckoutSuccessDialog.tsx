@@ -1,4 +1,4 @@
-import { forwardRef, useImperativeHandle, useRef } from "react";
+import { forwardRef, use, useImperativeHandle, useRef } from "react";
 import { buttonVariants } from "./ui/button";
 import {
   Dialog,
@@ -13,16 +13,22 @@ import { CheckCircle } from "lucide-react";
 import Link from "next/link";
 import { cn, formatPrice } from "@/lib/utils";
 import { ScrollArea } from "./ui/scroll-area";
-import { useCart } from "../hooks/use-cart";
+import { useCartStore } from "../../hooks/use-cart";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { useShallow } from "zustand/react/shallow";
 
 export const CheckoutSuccessDialog = forwardRef(function CheckoutSuccessDialog(
   {},
   ref
 ) {
   const dialogTriggerRef = useRef<HTMLButtonElement | null>(null);
-  const { items, clearCart } = useCart();
+  const { items, clearCart } = useCartStore(
+    useShallow((state) => ({
+      items: state.items,
+      clearCart: state.clearCart,
+    }))
+  );
   const router = useRouter();
 
   useImperativeHandle(
@@ -73,7 +79,7 @@ export const CheckoutSuccessDialog = forwardRef(function CheckoutSuccessDialog(
           {items.map((item) => (
             <div
               className="w-full flex flex-col md:flex-row mb-3"
-              key={item.product.name}
+              key={item.name}
             >
               <div
                 className="w-full md:w-1/2 px-4 py-3 flex items-center justify-between bg-gray-100 
@@ -81,8 +87,8 @@ export const CheckoutSuccessDialog = forwardRef(function CheckoutSuccessDialog(
               >
                 <div className="size-16 md:size-20 mr-1 relative">
                   <Image
-                    src={item.product.image}
-                    alt={item.product.name}
+                    src={item.image}
+                    alt={item.name}
                     fill
                     className="absolute object-contain"
                   />
@@ -90,12 +96,10 @@ export const CheckoutSuccessDialog = forwardRef(function CheckoutSuccessDialog(
 
                 <div className="flex items-start w-2/3">
                   <div className="grid grid-cols-1">
-                    <h3 className="text-sm font-semibold mb-1">
-                      {item.product.name}
-                    </h3>
+                    <h3 className="text-sm font-semibold mb-1">{item.name}</h3>
                     <div className="text-muted-foreground font-medium text-sm">
                       {formatPrice({
-                        price: item.product.price,
+                        price: item.price,
                         options: { maximumFractionDigits: 2 },
                       })}
                     </div>
@@ -115,7 +119,7 @@ export const CheckoutSuccessDialog = forwardRef(function CheckoutSuccessDialog(
                 </div>
                 <div className="text-base font-bold">
                   {formatPrice({
-                    price: item.product.price * item.quantity,
+                    price: item.price * item.quantity,
                     options: { maximumFractionDigits: 2 },
                   })}
                 </div>

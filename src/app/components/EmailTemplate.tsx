@@ -1,5 +1,5 @@
 import { CheckoutSchemaType } from "@/lib/schema";
-import { CartItem } from "../hooks/use-cart";
+import { CartItem } from "@/types/cart";
 import {
   Body,
   Container,
@@ -84,28 +84,28 @@ export default function EmailTemplate({
             style={{ ...paddingX, paddingTop: "40px", paddingBottom: "40px" }}
           >
             {items.map((item) => (
-              <Row key={item.product.name}>
+              <Row key={item.name}>
                 <Column>
                   <Img
-                    src={item.product.image}
-                    alt={item.product.name}
+                    src={item.image}
+                    alt={item.name}
                     style={{ float: "left" }}
                     width="260px"
                   />
                 </Column>
                 <Column style={{ verticalAlign: "top", paddingLeft: "12px" }}>
                   <Text style={{ ...paragraph, fontWeight: "500" }}>
-                    {item.product.name}
+                    {item.name}
                   </Text>
                   <Text
                     style={global.text}
                   >{`Order quantity: ${item.quantity}`}</Text>
                   <Text style={global.text}>{`Price: ${formatPrice({
-                    price: item.product.price,
+                    price: item.price,
                     options: { maximumFractionDigits: 2 },
                   })}`}</Text>
                   <Text style={global.text}>{`Grand Total: ${formatPrice({
-                    price: item.product.price * item.quantity,
+                    price: item.price * item.quantity,
                     options: { maximumFractionDigits: 2 },
                   })}`}</Text>
                 </Column>

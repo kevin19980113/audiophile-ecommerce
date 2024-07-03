@@ -1,29 +1,33 @@
 import { formatPrice } from "@/lib/utils";
-import { useCart } from "../hooks/use-cart";
+import { useCartStore } from "../../hooks/use-cart";
 import { ScrollArea } from "./ui/scroll-area";
 import Image from "next/image";
+import { useShallow } from "zustand/react/shallow";
 
 export default function CartItems({ mode }: { mode: "checkout" | "cart" }) {
-  const { items, addItem, removeItem } = useCart();
-
-  const totalPrice = items.reduce(
-    (acc, item) => acc + item.product.price * item.quantity,
-    0
+  const { items, incItem, decItem, totalPrice } = useCartStore(
+    useShallow((state) => ({
+      items: state.items,
+      incItem: state.incItem,
+      decItem: state.decItem,
+      totalPrice: state.totalPrice,
+    }))
   );
+
   return (
     <>
       <ScrollArea className="w-full max-h-60 md:max-h-80 flex flex-col items-center pr-3">
         <div className="w-full flex flex-col items-center gap-y-6">
           {items.map((item) => (
             <div
-              key={`${item.product.name}-${item.product.id}`}
+              key={`${item.name}-${item.id}`}
               className="w-full flex items-center justify-between gap-x-6"
             >
               <div className="flex items-center gap-x-3 w-full">
                 <div className="size-12 md:size-20 xl:size-24 rounded-md relative">
                   <Image
-                    src={item.product.image}
-                    alt={item.product.name}
+                    src={item.image}
+                    alt={item.name}
                     fill
                     className="absolute object-contain"
                   />
@@ -32,11 +36,11 @@ export default function CartItems({ mode }: { mode: "checkout" | "cart" }) {
                 <div className="flex items-start justify-between gap-x-4 w-full">
                   <div className="flex flex-col items-start">
                     <h1 className="text-xs xl:text-sm font-semibold">
-                      {item.product.name}
+                      {item.name}
                     </h1>
                     <span className="text-xs xl:text-sm font-medium text-muted-foreground">
                       {formatPrice({
-                        price: item.product.price,
+                        price: item.price,
                         options: { maximumFractionDigits: 0 },
                       })}
                     </span>
@@ -55,7 +59,7 @@ export default function CartItems({ mode }: { mode: "checkout" | "cart" }) {
                   <button
                     className="px-2 py-1 h-full flex items-center justify-center hover:bg-slate-200 cursor-pointer
                   sm:px-3 sm:py-2"
-                    onClick={() => removeItem(item.product)}
+                    onClick={() => decItem(item.id)}
                   >
                     -
                   </button>
@@ -64,7 +68,7 @@ export default function CartItems({ mode }: { mode: "checkout" | "cart" }) {
                   </div>
                   <button
                     className="px-2 h-full flex items-center justify-center hover:bg-slate-200 cursor-pointer"
-                    onClick={() => addItem(item.product, 1)}
+                    onClick={() => incItem(item.id)}
                   >
                     +
                   </button>

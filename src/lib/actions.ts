@@ -5,7 +5,7 @@ import { CheckoutSchemaType, checkoutSchema } from "./schema";
 import { Resend } from "resend";
 import EmailTemplate from "@/app/components/EmailTemplate";
 import React from "react";
-import { CartItem } from "@/app/hooks/use-cart";
+import { CartItem } from "@/types/cart";
 import { generateOrderNumber, generateTrackingNumber } from "./utils";
 
 export const checkout = async (checkoutData: CheckoutSchemaType) => {
