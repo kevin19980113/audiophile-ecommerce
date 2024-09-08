@@ -26,7 +26,7 @@ Audiophile is a modern e-commerce website built with Next.js, React, and Tailwin
 - Zustand for state management
 - React Hook Form with Zod for form handling and validation
 - Shadcn.ui for UI components
-- Kind for authentication
+- Kinde for authentication
 
 ## Key Features Explained
 
